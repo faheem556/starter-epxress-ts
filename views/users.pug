@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1= title
+  url
+    each user in users
+      li= user.name + ' - '
+        a(href='mailto:' + user.email)= user.email

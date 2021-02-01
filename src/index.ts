@@ -1,10 +1,22 @@
 import http from 'http';
 import app from './app';
-import Logger from 'jet-logger';
+import mongoose from 'mongoose';
+import logger from './shared/logger';
 
-const logger = new Logger();
 const port = Number(process.env.PORT || 3000);
 app.set('port', port);
+
+mongoose.connect(`mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`, {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  // we're connected!
+  logger.info("DB Connected");
+});
 
 const server = http.createServer(app);
 
